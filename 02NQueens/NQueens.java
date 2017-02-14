@@ -5,8 +5,31 @@ class NQueens{
 
 	// int[][] board;
 	NQueens(){
+		size = 8;
 
 	}
+	NQueens(int n){
+		size = n;
+	}
+	public static int size;
+	public static boolean notDoneBefore = true;
+	public static boolean printNum = false;
+	public static String firstSolution = "a";
+	public static int numSolutions = -1;
+
+	public void countSolutions(){
+		printNum = false;
+		numSolutions = numSolutions(size);
+	} 
+
+	public int getSolutionCount(){
+		return numSolutions;
+	}
+
+	public String toString(){
+		return firstSolution;
+	}
+
 	public static int numSolutions(int size){
 		int[][] board = new int[size][size];
 		for (int row = 0; row < board.length; row++){
@@ -14,9 +37,68 @@ class NQueens{
 				board[row][col] = 0;
 			}
 		}
+		if (printNum){
+			System.out.println(sumList(inputBoard(board, 0)));
+			}
 		return sumList(inputBoard(board, 0));
 	}
 
+
+	public static void main(String[] args) {
+		NQueens n = new NQueens(10);
+		n.countSolutions();
+		System.out.println(n.toString());
+		System.out.println(n.getSolutionCount()); // findSolutions( 8 ));
+
+	}
+	public static void solve(){
+		notDoneBefore = true;
+		System.out.println("number of solutions:");
+	}
+
+	public static int[] findPotentialSpots(int[][] board, int row){
+
+		ArrayList<Integer> out = new ArrayList<Integer>();
+		for (int spot = 0; spot < board[row].length; spot++){
+			if (board[row][spot] == 0){
+				out.add(spot);
+			}
+		}
+		return convertIntegers(out);
+	}
+
+
+
+	public static int[] inputBoard(int[][] board, int row){
+		
+		int[] potentialSpots = findPotentialSpots(board, row); // implement find valid moves returns array of indicies of valids
+		
+		if (row == board.length - 1){ // if last row
+			int[] finalize = new int[1];
+			finalize[0] = potentialSpots.length; // at this point potentialSpots should also be empty
+			if (potentialSpots.length >= 1){
+				if (notDoneBefore){
+					firstSolution = arrayToStringQ(addQueen(board, row, potentialSpots[0]));
+					// System.out.println(firstSolution);
+					notDoneBefore = false;
+				}
+				return finalize;
+			}
+		}
+		
+		if (potentialSpots.length == 0){
+			int[] finalize = new int[1]; // return either empty array or zero
+			finalize[0] = 0;
+			return finalize;
+		}
+		int[] out = new int[potentialSpots.length];
+		int i = 0;
+		for (int column : potentialSpots){  // only do if NOT last row
+			out[i] =  sumList(inputBoard(addQueen(board, row,column), row + 1));  // board.addQueen(int col) returns board with queen added at place
+			i += 1;
+		}
+		return out;
+	}
 	public static String arrayToString(int[][] ary){
 		String out = "";
 		for (int[] row : ary){
@@ -27,6 +109,7 @@ class NQueens{
 		}
 		return out;
 	}
+
 	public static String arrayToStringQ(int[][] ary){
 		String out = "";
 		String piece;
@@ -47,58 +130,6 @@ class NQueens{
 		}
 		return out;
 	}
-	public static void main(String[] args) {
-
-		System.out.println(numSolutions( 8 ));
-		// System.out.println( findSolutions( 8 ));
-	}
-
-	public static int[] findPotentialSpots(int[][] board, int row){
-
-		ArrayList<Integer> out = new ArrayList<Integer>();
-		for (int spot = 0; spot < board[row].length; spot++){
-			if (board[row][spot] == 0){
-				out.add(spot);
-			}
-		}
-		return convertIntegers(out);
-	}
-
-	public static boolean notDoneBefore = true;
-
-
-	public static int[] inputBoard(int[][] board, int row){
-		
-		int[] potentialSpots = findPotentialSpots(board, row); // implement find valid moves returns array of indicies of valids
-		
-		if (row == board.length - 1){ // if last row
-			int[] finalize = new int[1];
-			finalize[0] = potentialSpots.length; // at this point potentialSpots should also be empty
-			if (potentialSpots.length >= 1){
-				if (notDoneBefore){
-					System.out.println(arrayToStringQ(addQueen(board, row, potentialSpots[0])));
-					notDoneBefore = false;
-				}
-				return finalize;
-			}
-		}
-
-		
-		
-		if (potentialSpots.length == 0){
-			int[] finalize = new int[1]; // return either empty array or zero
-			finalize[0] = 0;
-			return finalize;
-		}
-		int[] out = new int[potentialSpots.length];
-		int i = 0;
-		for (int column : potentialSpots){  // only do if NOT last row
-			out[i] =  sumList(inputBoard(addQueen(board, row,column), row + 1));  // board.addQueen(int col) returns board with queen added at place
-			i += 1;
-		}
-		return out;
-	}
-
 	public static int[][] addQueen(int[][] inBoard, int rowAdd, int colAdd){
 		int[][] board = aryCopy(inBoard);
 		for (int row = 0; row < board.length; row++){
