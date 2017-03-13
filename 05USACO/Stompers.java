@@ -67,22 +67,20 @@ public class Stompers{
 		Stompers a = new Stompers();
 		
 		try{
-			System.out.println("s");
-	    	System.out.println(a.Stomp("makelake.in"));
+
+	    	System.out.println(a.Stomp("file.txt"));
 	    	//System.out.println(n);
 	    	//toString(elevations);
 		}
 		catch (FileNotFoundException e){
-			System.out.println("failed");
+			System.out.println("failed to find file");
 		}
 
 	}
 	public void importFile(String filename) throws FileNotFoundException{
-		System.out.println("started");
 		File f = new File(filename);
-		System.out.println("std");
 		Scanner s = new Scanner(f);
-		System.out.println("saids");
+
 
 		elevations = new int[s.nextInt()][s.nextInt()];
 		int el = s.nextInt();
